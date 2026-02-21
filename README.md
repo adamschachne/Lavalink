@@ -207,7 +207,7 @@ version: "3.8"
 
 services:
     lavalink:
-        image: ghcr.io/lavalink-devs/lavalink:3 # pin the image version to Lavalink v3
+        image: ghcr.io/cog-creators/lavalink:3 # pin the image version to Lavalink v3
         container_name: lavalink
         restart: unless-stopped
         environment:
