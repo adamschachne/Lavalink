@@ -38,11 +38,6 @@ subprojects {
     apply(plugin = "java")
     apply(plugin = "idea")
 
-    if (project.hasProperty("includeAnalysis")) {
-        project.logger.lifecycle("applying analysis plugins")
-        apply(from = "../analysis.gradle")
-    }
-
     tasks.withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "11"
     }
