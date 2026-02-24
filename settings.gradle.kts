@@ -77,9 +77,9 @@ fun VersionCatalogBuilder.common() {
     library("kotlin-reflect",     "org.jetbrains.kotlin", "kotlin-reflect").versionRef("kotlin")
     library("kotlin-stdlib-jdk8", "org.jetbrains.kotlin", "kotlin-stdlib-jdk8").versionRef("kotlin")
 
-    library("logback",        "ch.qos.logback",       "logback-classic").version("1.2.3")
+    library("logback",        "ch.qos.logback",       "logback-classic").version("1.2.11")
     library("sentry-logback", "io.sentry",            "sentry-logback").version("1.7.2")
-    library("oshi",           "com.github.oshi",      "oshi-core").version("6.4.8")
+    library("oshi",           "com.github.oshi",      "oshi-core").version("6.4.11")
     library("json",           "org.json",             "json").version("20180813")
 
     library("spotbugs", "com.github.spotbugs", "spotbugs-annotations").version("3.1.6")

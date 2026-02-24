@@ -32,6 +32,11 @@ configurations {
     compileOnly {
         extendsFrom(annotationProcessor.get())
     }
+    all {
+        resolutionStrategy {
+            force("org.slf4j:slf4j-api:1.7.36")
+        }
+    }
 }
 
 dependencies {
@@ -51,6 +56,7 @@ dependencies {
     }
     implementation(libs.koe.udpqueue) {
         exclude(module = "lava-common")
+        exclude(module = "udp-queue")
     }
 	implementation(libs.bundles.libdave.natives)
     implementation(libs.bundles.udpqueue.natives) {
