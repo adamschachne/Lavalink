@@ -35,7 +35,8 @@ import lavalink.server.io.SocketContext
 import lavalink.server.io.SocketServer.Companion.sendPlayerUpdate
 import lavalink.server.player.filters.FilterChain
 import moe.kyokobot.koe.MediaConnection
-import moe.kyokobot.koe.media.OpusAudioFrameProvider
+import moe.kyokobot.koe.codec.CodecInstance
+import moe.kyokobot.koe.media.AudioFrameProvider
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 
@@ -66,7 +67,7 @@ class LavalinkPlayer(
     }
 
     fun provideTo(connection: MediaConnection) {
-        connection.audioSender = Provider(connection)
+        connection.audioSender = Provider()
     }
 
     override fun isPlaying(): Boolean = audioPlayer.playingTrack != null && !audioPlayer.isPaused
@@ -118,8 +119,13 @@ class LavalinkPlayer(
         )
     }
 
-    private inner class Provider(connection: MediaConnection?) : OpusAudioFrameProvider(connection) {
+    private inner class Provider : AudioFrameProvider {
         private var lastFrame: AudioFrame? = null
+
+        override fun onCodecChanged(codec: CodecInstance) {
+        }
+
+        override fun dispose() {}
 
         override fun canProvide(): Boolean {
             lastFrame = audioPlayer.provide()
@@ -131,9 +137,10 @@ class LavalinkPlayer(
             }
         }
 
-        override fun retrieveOpusFrame(buf: ByteBuf) {
+        override fun provideFrame(buf: ByteBuf): Boolean {
             audioLossCounter.onSuccess()
             buf.writeBytes(lastFrame!!.data)
+            return true
         }
     }
 }

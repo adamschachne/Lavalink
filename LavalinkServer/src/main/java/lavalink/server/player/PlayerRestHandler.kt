@@ -74,8 +74,8 @@ class PlayerRestHandler(
 
         playerUpdate.voice.takeIfPresent {
             //discord sometimes send a partial server update missing the endpoint, which can be ignored.
-            if (it.endpoint.isEmpty() || it.token.isEmpty() || it.sessionId.isEmpty()) {
-                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Partial voice state update: $it")
+            if (it.token.isBlank() || it.endpoint.isBlank() || it.sessionId.isBlank() || it.channelId.isNullOrBlank()) {
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "token, endpoint, sessionId and channelId must be provided in voice state")
             }
         }
 
@@ -94,13 +94,21 @@ class PlayerRestHandler(
                 oldConn.voiceServerInfo == null ||
                 oldConn.voiceServerInfo?.endpoint != it.endpoint ||
                 oldConn.voiceServerInfo?.token != it.token ||
-                oldConn.voiceServerInfo?.sessionId != it.sessionId
+                oldConn.voiceServerInfo?.sessionId != it.sessionId ||
+                oldConn.voiceServerInfo?.channelId != it.channelId!!.toLong()
             ) {
                 //clear old connection
                 context.koe.destroyConnection(guildId)
 
                 val conn = context.getMediaConnection(player)
-                conn.connect(VoiceServerInfo(it.sessionId, it.endpoint, it.token)).exceptionally {
+                conn.connect(
+                    VoiceServerInfo.builder()
+                        .setSessionId(it.sessionId)
+                        .setEndpoint(it.endpoint)
+                        .setToken(it.token)
+                        .setChannelId(it.channelId!!.toLong())
+                        .build()
+                ).exceptionally {
                     throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to connect to voice server")
                 }.toCompletableFuture().join()
                 player.provideTo(conn)

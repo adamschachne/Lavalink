@@ -62,6 +62,7 @@ class WebSocketHandler(
     private fun voiceUpdate(json: JSONObject) {
         val sessionId = json.getString("sessionId")
         val guildId = json.getLong("guildId")
+        val channelId = json.getLong("channelId")
 
         val event = json.getJSONObject("event")
         val endpoint: String? = event.optString("endpoint")
@@ -74,9 +75,15 @@ class WebSocketHandler(
 
         val player = context.getPlayer(guildId)
         val conn = context.getMediaConnection(player)
-        conn.connect(VoiceServerInfo(sessionId, endpoint, token)).whenComplete { _, _ ->
-            player.provideTo(conn)
-        }
+        conn.connect(
+            VoiceServerInfo.builder()
+                .setSessionId(sessionId)
+                .setEndpoint(endpoint)
+                .setToken(token)
+                .setChannelId(channelId)
+                .build()
+        ).toCompletableFuture().join()
+        player.provideTo(conn)
     }
 
     private fun play(json: JSONObject) {

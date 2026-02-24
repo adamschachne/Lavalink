@@ -575,17 +575,21 @@ GET /v3/sessions/{sessionId}/players
 
 ##### Voice State
 
-| Field      | Type   | Description                                                                                 |
-|------------|--------|---------------------------------------------------------------------------------------------|
-| token      | string | The Discord voice token to authenticate with                                                |
-| endpoint   | string | The Discord voice endpoint to connect to                                                    |
-| sessionId  | string | The Discord voice session id to authenticate with                                           |
-| connected? | bool   | Whether the player is connected. Response only                                              |
-| ping?      | int    | Roundtrip latency in milliseconds to the voice gateway (-1 if not connected). Response only |
+| Field      | Type        | Description                                                                                 |
+|------------|-------------|---------------------------------------------------------------------------------------------|
+| token      | string      | The Discord voice token to authenticate with                                                |
+| endpoint   | string      | The Discord voice endpoint to connect to                                                    |
+| sessionId  | string      | The Discord voice session id to authenticate with                                           |
+| channelId  | ?string[^1] | The Discord voice channel id the bot is connecting to                                       |
+| connected? | bool        | Whether the player is connected. Response only                                              |
+| ping?      | int         | Roundtrip latency in milliseconds to the voice gateway (-1 if not connected). Response only |
 
-`token`, `endpoint`, and `sessionId` are the 3 required values for connecting to one of Discord's voice servers.
-`sessionId` is provided by the Voice State Update event sent by Discord, whereas the `endpoint` and `token` are provided
-with the Voice Server Update. Please refer to https://discord.com/developers/docs/topics/gateway-events#voice
+[^1]: `channelId` is not nullable when updating the player.
+
+`token`, `endpoint`, `sessionId` and `channelId` are the 4 required values for connecting to one of Discord's voice servers.
+`sessionId` & `channelId` are provided by the Voice State Update event sent by Discord, whereas the `endpoint` and `token` are provided
+with the Voice Server Update.
+Please refer to https://docs.discord.com/developers/events/gateway-events#voice-state-update & https://docs.discord.com/developers/events/gateway-events#voice-server-update
 
 <details>
 <summary>Example Payload</summary>
@@ -614,6 +618,7 @@ with the Voice Server Update. Please refer to https://discord.com/developers/doc
       "token": "...",
       "endpoint": "...",
       "sessionId": "...",
+      "channelId": "...",
       "connected": true,
       "ping": 10
     },
@@ -663,6 +668,7 @@ Response:
     "token": "...",
     "endpoint": "...",
     "sessionId": "...",
+    "channelId": "...",
     "connected": true,
     "ping": 10
   },
@@ -723,7 +729,8 @@ When `identifier` is used, Lavalink will try to resolve the identifier as a sing
   "voice": {
     "token": "...",
     "endpoint": "...",
-    "sessionId": "..."
+    "sessionId": "...",
+    "channelId": "..."
   }
 }
 ```
@@ -760,6 +767,7 @@ Response:
     "token": "...",
     "endpoint": "...",
     "sessionId": "...",
+    "channelId": "...",
     "connected": true,
     "ping": 10
   },
@@ -1664,6 +1672,7 @@ Provide an intercepted voice server update. This causes the server to connect to
 {
   "op": "voiceUpdate",
   "guildId": "...",
+  "channelId": "...",
   "sessionId": "...",
   "event": { ... }
 }

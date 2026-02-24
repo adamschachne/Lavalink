@@ -35,16 +35,24 @@ fun VersionCatalogBuilder.spring() {
 
 fun VersionCatalogBuilder.voice() {
     version("lavaplayer", "1.5.6")
+    version("koe", "3.0.0-pre1")
 
     library("lavaplayer",            "dev.arbjerg", "lavaplayer").versionRef("lavaplayer")
     library("lavaplayer-ip-rotator", "dev.arbjerg", "lavaplayer-ext-youtube-rotator").versionRef("lavaplayer")
     library("lavadsp",               "dev.arbjerg", "lavadsp").version("0.7.8")
 
-    library("koe",          "moe.kyokobot.koe", "core").version("2.0.3-rc2")
-    library("koe-udpqueue", "moe.kyokobot.koe", "ext-udpqueue").version("2.0.3-rc2")
+    library("koe",          "moe.kyokobot.koe", "core").versionRef("koe")
+    library("koe-udpqueue", "moe.kyokobot.koe", "ext-udpqueue").versionRef("koe")
 
-    version("udpqueue", "0.2.7")
-    val platforms = listOf("linux-x86-64", "linux-x86", "linux-aarch64", "linux-arm", "linux-musl-x86-64", "linux-musl-aarch64", "win-x86-64", "win-x86", "darwin")
+    version("libdave", "5e67f6b43")
+    val libDavePlatforms = listOf("linux-x86-64", "linux-x86", "linux-aarch64", "linux-arm", "linux-musl-x86-64", "linux-musl-aarch64", "win-x86-64", "win-x86", "darwin")
+    libDavePlatforms.forEach {
+        library("libdave-natives-$it", "moe.kyokobot.libdave", "natives-$it").versionRef("libdave")
+    }
+    bundle("libdave-natives", libDavePlatforms.map { "libdave-natives-$it" })
+
+    version("udpqueue", "0.2.12")
+    val platforms = listOf("linux-x86-64", "linux-x86", "linux-aarch64", "linux-arm", "linux-musl-x86-64", "linux-musl-aarch64", "win-x86-64", "win-x86", "win-aarch64", "darwin")
     platforms.forEach {
         library("udpqueue-native-$it", "club.minnced", "udpqueue-native-$it").versionRef("udpqueue")
     }

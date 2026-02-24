@@ -70,6 +70,7 @@ fun LavalinkPlayer.toPlayer(context: SocketContext): Player {
             voiceServerInfo?.token ?: "",
             voiceServerInfo?.endpoint ?: "",
             voiceServerInfo?.sessionId ?: "",
+            voiceServerInfo?.channelId?.toString(),
             connection?.isOpen ?: false,
             connection?.ping ?: -1
         ),

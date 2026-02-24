@@ -51,6 +51,7 @@ data class VoiceState(
     val token: String = "",
     val endpoint: String = "",
     val sessionId: String = "",
+    val channelId: String? = null,
     val connected: Boolean = false,
     val ping: Long = -1
 )
