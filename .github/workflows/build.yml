@@ -10,6 +10,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
+      artifact-metadata: write
+      attestations: write
+      id-token: write
       packages: write
     steps:
       - name: Checkout
@@ -29,6 +32,13 @@ jobs:
         env:
           GIT_BRANCH: ${{ github.head_ref || github.ref_name }}
         run: ./gradlew build
+
+      - name: Generate attestations
+        uses: actions/attest@v4
+        if: github.event_name == 'workflow_call'
+        with:
+          subject-name: Lavalink.jar
+          subject-path: LavalinkServer/build/libs/Lavalink.jar
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v7
