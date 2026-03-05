@@ -29,10 +29,11 @@ jobs:
         run: ./gradlew build
 
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: Lavalink.jar
           path: LavalinkServer/build/libs/Lavalink.jar
+          archive: false
 
       - name: Docker Meta
         id: meta
