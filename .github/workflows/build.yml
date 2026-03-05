@@ -26,6 +26,8 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
 
       - name: Execute Gradle build
+        env:
+          GIT_BRANCH: ${{ github.head_ref || github.ref_name }}
         run: ./gradlew build
 
       - name: Upload Artifacts
