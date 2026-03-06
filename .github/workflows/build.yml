@@ -35,10 +35,10 @@ jobs:
           GIT_BRANCH: ${{ github.head_ref || github.ref_name }}
         run: ./gradlew build
 
-      - name: Generate attestations
+      - name: Generate attestation
         id: attest
         uses: actions/attest@v4
-        if: github.event_name == 'workflow_call'
+        if: github.event_name == 'release'
         with:
           subject-name: Lavalink.jar
           subject-path: LavalinkServer/build/libs/Lavalink.jar

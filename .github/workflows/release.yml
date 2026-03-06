@@ -34,7 +34,7 @@ jobs:
           RELEASE_TAG_NAME: ${{ github.event.release.tag_name }}
           TO_APPEND: |
 
-            Artifact attestations available at:
+            Artifact attestation available at:
             ${{ needs.build.outputs.attestation_url }}
         run: |
           gh release upload "$RELEASE_TAG_NAME" Lavalink.jar
