@@ -69,7 +69,7 @@ Here is a list of known working hardware:
 [^1]: Windows on ARM is not natively supported, but seems to work fine with x86-64 JVMs & emulation.
 
 > [!NOTE]
-> The minimum supported version for glibc in DAVE is 2.28 (Rocky Linux 8).
+> The minimum supported version for glibc in DAVE is 2.28 (Rocky Linux 8) on x86-64 / aarch64 and 2.35 (Ubuntu 22.04) on other architectures.
 
 ## Changelog
 
