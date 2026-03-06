@@ -28,11 +28,15 @@ jobs:
           name: Lavalink.jar
 
       - name: Upload Artifacts to GitHub Release
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: Lavalink.jar
-          allowUpdates: true
-          omitBodyDuringUpdate: true
-          omitDraftDuringUpdate: true
-          omitNameDuringUpdate: true
-          omitPrereleaseDuringUpdate: true
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG_NAME: ${{ github.event.release.tag_name }}
+          TO_APPEND: |
+
+            Artifact attestations available at:
+            ${{ needs.build.outputs.attestation_url }}
+        run: |
+          gh release upload "$RELEASE_TAG_NAME" Lavalink.jar
+          notes=$(gh release view "$RELEASE_TAG_NAME" --json body -q .body)
+          gh release edit "$RELEASE_TAG_NAME" --notes "${body}${TO_APPEND}"

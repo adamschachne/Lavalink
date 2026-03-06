@@ -14,6 +14,8 @@ jobs:
       attestations: write
       id-token: write
       packages: write
+    outputs:
+      attestation_url: ${{ steps.attest.outputs.attestation-url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -34,6 +36,7 @@ jobs:
         run: ./gradlew build
 
       - name: Generate attestations
+        id: attest
         uses: actions/attest@v4
         if: github.event_name == 'workflow_call'
         with:
