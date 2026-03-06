@@ -32,7 +32,8 @@ jobs:
           GH_REPO: ${{ github.repository }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_TAG_NAME: ${{ github.event.release.tag_name }}
-          TO_APPEND: |
+          TO_APPEND: |-
+
 
             Artifact attestation available at:
             ${{ needs.build.outputs.attestation_url }}

@@ -5,6 +5,9 @@ on:
     branches: [ '**' ]
     paths-ignore: [ '**.md' ]
   workflow_call:
+    outputs:
+      attestation_url:
+        value: ${{ jobs.build.outputs.attestation_url }}
 
 jobs:
   build:
