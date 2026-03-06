@@ -39,4 +39,4 @@ jobs:
         run: |
           gh release upload "$RELEASE_TAG_NAME" Lavalink.jar
           notes=$(gh release view "$RELEASE_TAG_NAME" --json body -q .body)
-          gh release edit "$RELEASE_TAG_NAME" --notes "${body}${TO_APPEND}"
+          gh release edit "$RELEASE_TAG_NAME" --notes "${notes}${TO_APPEND}"
