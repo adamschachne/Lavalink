@@ -46,6 +46,16 @@ public interface ISocketContext {
      */
     void destroyPlayer(long guildId);
 
+    /** Serialize an operation with inbound packets on Koe's UDP event loop. */
+    default void executeOnVoiceTransport(long guildId, Runnable operation) {
+        throw new UnsupportedOperationException("Voice transport barriers are not available");
+    }
+
+    /** Return the current Koe transport generation, or zero before connection. */
+    default long getVoiceTransportGeneration(long guildId) {
+        return 0;
+    }
+
     /**
      * @param message a JSON message to send to the WebSocket client
      *

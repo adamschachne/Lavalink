@@ -1,0 +1,36 @@
+# This is a Gradle generated file for dependency locking.
+# Manual edits can break the build and are not advised.
+# This file is expected to be part of source control.
+com.fasterxml.jackson.core:jackson-annotations:2.13.2=compileClasspath
+com.fasterxml.jackson.core:jackson-core:2.13.2=compileClasspath
+com.fasterxml.jackson.core:jackson-databind:2.13.2=compileClasspath
+com.fasterxml.jackson.module:jackson-module-kotlin:2.13.2=compileClasspath
+com.fasterxml.jackson:jackson-bom:2.13.2=compileClasspath
+commons-codec:commons-codec:1.11=compileClasspath
+commons-logging:commons-logging:1.2=compileClasspath
+dev.arbjerg:lava-common:1.5.6=compileClasspath
+dev.arbjerg:lavaplayer:1.5.6=compileClasspath
+org.apache.httpcomponents:httpclient:4.5.10=compileClasspath
+org.apache.httpcomponents:httpcore:4.4.12=compileClasspath
+org.jetbrains.kotlin:kotlin-build-tools-api:2.3.0=kotlinBuildToolsApiClasspath
+org.jetbrains.kotlin:kotlin-build-tools-compat:2.3.0=kotlinBuildToolsApiClasspath
+org.jetbrains.kotlin:kotlin-build-tools-impl:2.3.0=kotlinBuildToolsApiClasspath
+org.jetbrains.kotlin:kotlin-compiler-embeddable:2.3.0=kotlinBuildToolsApiClasspath,kotlinCompilerClasspath
+org.jetbrains.kotlin:kotlin-compiler-runner:2.3.0=kotlinBuildToolsApiClasspath
+org.jetbrains.kotlin:kotlin-daemon-client:2.3.0=kotlinBuildToolsApiClasspath
+org.jetbrains.kotlin:kotlin-daemon-embeddable:2.3.0=kotlinBuildToolsApiClasspath,kotlinCompilerClasspath
+org.jetbrains.kotlin:kotlin-reflect:1.5.30=compileClasspath
+org.jetbrains.kotlin:kotlin-reflect:1.6.10=kotlinBuildToolsApiClasspath,kotlinCompilerClasspath
+org.jetbrains.kotlin:kotlin-script-runtime:2.3.0=kotlinBuildToolsApiClasspath,kotlinCompilerClasspath,kotlinCompilerPluginClasspathMain
+org.jetbrains.kotlin:kotlin-scripting-common:2.3.0=kotlinCompilerPluginClasspathMain
+org.jetbrains.kotlin:kotlin-scripting-compiler-embeddable:2.3.0=kotlinCompilerPluginClasspathMain
+org.jetbrains.kotlin:kotlin-scripting-compiler-impl-embeddable:2.3.0=kotlinCompilerPluginClasspathMain
+org.jetbrains.kotlin:kotlin-scripting-jvm:2.3.0=kotlinCompilerPluginClasspathMain
+org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.3.0=compileClasspath
+org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.3.0=compileClasspath
+org.jetbrains.kotlin:kotlin-stdlib:2.3.0=compileClasspath,kotlinBuildToolsApiClasspath,kotlinCompilerClasspath,kotlinCompilerPluginClasspathMain
+org.jetbrains.kotlin:kotlin-tooling-core:2.3.0=kotlinBuildToolsApiClasspath
+org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.8.0=kotlinBuildToolsApiClasspath,kotlinCompilerClasspath
+org.jetbrains:annotations:13.0=compileClasspath,kotlinBuildToolsApiClasspath,kotlinCompilerClasspath,kotlinCompilerPluginClasspathMain
+org.slf4j:slf4j-api:1.7.25=compileClasspath
+empty=kotlinScriptDefExtensions

@@ -93,7 +93,7 @@ tasks {
             "project.version"    to project.version,
             "project.groupId"    to project.group,
             "project.artifactId" to "Lavalink-Server",
-            "env.BUILD_TIME"     to System.currentTimeMillis().toString()
+            "env.BUILD_TIME"     to "1772758801000"
         )
 
         filter(ReplaceTokens::class, mapOf("tokens" to tokens))
@@ -101,6 +101,26 @@ tasks {
             from("application.yml.example")
             into("$buildDir/resources/main")
         }
+        doLast {
+            // The upstream git-properties task embeds the build clock, host,
+            // and builder identity. Replace it with the exact pinned source
+            // identity so equal inputs produce equal artifacts.
+            file("$buildDir/resources/main/git.properties").writeText(
+                """git.branch=3.7.13+red.5
+git.commit.id=c5cb5a0d85d699b039f655614af3e2de0a5d8c61
+git.commit.id.abbrev=c5cb5a0
+git.commit.user.name=Jakub Kuczys
+git.commit.user.email=me@jacken.men
+git.commit.message.short=Revert \"Use tagged version\"
+git.commit.message.full=Revert \"Use tagged version\"
+git.commit.time=2026-03-06T01\:00\:01+0000
+"""
+            )
+        }
+    }
+
+    matching { it.name == "generateGitProperties" }.configureEach {
+        enabled = false
     }
 
     // https://stackoverflow.com/questions/41444916/multiple-artifacts-issue-with-deploying-zip-to-nexus

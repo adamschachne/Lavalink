@@ -32,6 +32,15 @@ allprojects {
         maven("https://maven.lavalink.dev/snapshots")
         maven("https://jitpack.io") // build projects directly from GitHub
     }
+
+    dependencyLocking {
+        lockAllConfigurations()
+    }
+
+    tasks.withType<AbstractArchiveTask>().configureEach {
+        isPreserveFileTimestamps = false
+        isReproducibleFileOrder = true
+    }
 }
 
 subprojects {
@@ -52,7 +61,9 @@ subprojects {
 }
 
 @SuppressWarnings("GrMethodMayBeStatic")
-fun versionFromTag(): String = Grgit.open(mapOf("currentDir" to project.rootDir)).use { git ->
+fun versionFromTag(): String {
+    project.findProperty("audioReceiveVersion")?.toString()?.let { return it }
+    return Grgit.open(mapOf("currentDir" to project.rootDir)).use { git ->
     val headTag = git.tag
         .list()
         .find { it.commit.id == git.head().id }
@@ -63,4 +74,5 @@ fun versionFromTag(): String = Grgit.open(mapOf("currentDir" to project.rootDir)
     }
 
     return if (headTag != null && clean) headTag.name else "${git.head().id}-SNAPSHOT"
+    }
 }

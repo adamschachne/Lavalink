@@ -4,6 +4,7 @@ include(":Lavalink-Server")
 include(":protocol")
 include(":plugin-api")
 
+
 project(":Lavalink-Server").projectDir = file("$rootDir/LavalinkServer")
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

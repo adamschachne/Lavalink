@@ -28,6 +28,7 @@ import dev.arbjerg.lavalink.api.AudioFilterExtension
 import dev.arbjerg.lavalink.api.ISocketContext
 import dev.arbjerg.lavalink.api.PluginEventHandler
 import dev.arbjerg.lavalink.api.WebSocketExtension
+import dev.arbjerg.lavalink.api.VoiceFrame
 import dev.arbjerg.lavalink.protocol.v3.Message
 import io.undertow.websockets.core.WebSocketCallback
 import io.undertow.websockets.core.WebSocketChannel
@@ -38,6 +39,7 @@ import lavalink.server.player.LavalinkPlayer
 import moe.kyokobot.koe.KoeClient
 import moe.kyokobot.koe.KoeEventAdapter
 import moe.kyokobot.koe.MediaConnection
+import moe.kyokobot.koe.ReceivedAudioFrame
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
 import org.springframework.web.socket.CloseStatus
@@ -150,6 +152,15 @@ class SocketContext(
         koe.destroyConnection(guild)
     }
 
+    override fun executeOnVoiceTransport(guildId: Long, operation: Runnable) {
+        val connection = koe.getConnection(guildId)
+            ?: throw IllegalStateException("No Koe transport exists for guild $guildId")
+        connection.executeOnTransport(operation)
+    }
+
+    override fun getVoiceTransportGeneration(guildId: Long): Long =
+        koe.getConnection(guildId)?.transportGeneration ?: 0
+
     fun pause() {
         sessionPaused = true
         sessionTimeoutFuture = executor.schedule<Unit>({
@@ -249,6 +260,29 @@ class SocketContext(
 
         override fun gatewayReady(target: InetSocketAddress?, ssrc: Int) {
             SocketServer.sendPlayerUpdate(this@SocketContext, player)
+        }
+
+        override fun audioFrameReceived(frame: ReceivedAudioFrame) {
+            eventEmitter.onVoiceFrame(VoiceFrame(
+                frame.guildId,
+                frame.channelId,
+                frame.userId,
+                frame.ssrc,
+                frame.sequence,
+                frame.rtpTimestamp,
+                frame.transportGeneration,
+                frame.receivedNanos,
+                frame.isMarker,
+                frame.isDave,
+                frame.csrcs,
+                frame.extensionProfile,
+                frame.extensionWords,
+                frame.opus
+            ))
+        }
+
+        override fun transportGenerationChanged(guildId: Long, channelId: Long, generation: Long) {
+            eventEmitter.onVoiceTransportGeneration(guildId, channelId, generation)
         }
     }
 }
