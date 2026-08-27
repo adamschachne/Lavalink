@@ -5,6 +5,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import java.util.Map;
+import java.util.Collections;
 
 /**
  * Represents a WebSocket connection
@@ -54,6 +55,16 @@ public interface ISocketContext {
     /** Return the current Koe transport generation, or zero before connection. */
     default long getVoiceTransportGeneration(long guildId) {
         return 0;
+    }
+
+    /** Enable or disable inbound media subscriptions on the Koe transport. */
+    default void setVoiceReceiveEnabled(long guildId, boolean enabled) {
+        throw new UnsupportedOperationException("Voice receive controls are not available");
+    }
+
+    /** Return transport counters and gauges captured from Koe's UDP receive path. */
+    default Map<String, Long> getVoiceReceiveDiagnostics(long guildId) {
+        return Collections.emptyMap();
     }
 
     /**

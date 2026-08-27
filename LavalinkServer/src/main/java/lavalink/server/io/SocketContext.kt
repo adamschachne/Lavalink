@@ -161,6 +161,15 @@ class SocketContext(
     override fun getVoiceTransportGeneration(guildId: Long): Long =
         koe.getConnection(guildId)?.transportGeneration ?: 0
 
+    override fun setVoiceReceiveEnabled(guildId: Long, enabled: Boolean) {
+        val connection = koe.getConnection(guildId)
+            ?: throw IllegalStateException("No Koe transport exists for guild $guildId")
+        connection.setReceiveEnabled(enabled)
+    }
+
+    override fun getVoiceReceiveDiagnostics(guildId: Long): Map<String, Long> =
+        koe.getConnection(guildId)?.receiveDiagnostics ?: emptyMap()
+
     fun pause() {
         sessionPaused = true
         sessionTimeoutFuture = executor.schedule<Unit>({
