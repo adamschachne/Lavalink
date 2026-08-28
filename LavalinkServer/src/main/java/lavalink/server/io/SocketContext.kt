@@ -28,7 +28,6 @@ import dev.arbjerg.lavalink.api.AudioFilterExtension
 import dev.arbjerg.lavalink.api.ISocketContext
 import dev.arbjerg.lavalink.api.PluginEventHandler
 import dev.arbjerg.lavalink.api.WebSocketExtension
-import dev.arbjerg.lavalink.api.VoiceFrame
 import dev.arbjerg.lavalink.protocol.v3.Message
 import io.undertow.websockets.core.WebSocketCallback
 import io.undertow.websockets.core.WebSocketChannel
@@ -36,6 +35,7 @@ import io.undertow.websockets.core.WebSockets
 import io.undertow.websockets.jsr.UndertowSession
 import lavalink.server.config.ServerConfig
 import lavalink.server.player.LavalinkPlayer
+import lavalink.server.receive.ReceiveCoordinator
 import moe.kyokobot.koe.KoeClient
 import moe.kyokobot.koe.KoeEventAdapter
 import moe.kyokobot.koe.MediaConnection
@@ -62,7 +62,8 @@ class SocketContext(
     eventHandlers: Collection<PluginEventHandler>,
     webSocketExtensions: List<WebSocketExtension>,
     filterExtensions: List<AudioFilterExtension>,
-    private val objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper,
+    private val receiveCoordinator: ReceiveCoordinator
 ) : ISocketContext {
 
     companion object {
@@ -120,6 +121,7 @@ class SocketContext(
     override fun getPlayer(guildId: Long) = players.computeIfAbsent(guildId) {
         val player = LavalinkPlayer(this, guildId, serverConfig, audioPlayerManager)
         eventEmitter.onNewPlayer(player)
+        receiveCoordinator.registerContext(this, guildId)
         player
     }
 
@@ -146,28 +148,29 @@ class SocketContext(
     override fun destroyPlayer(guild: Long) {
         val player = players.remove(guild)
         if (player != null) {
+            receiveCoordinator.unregisterContext(this, guild, "Lavalink player destroyed")
             eventEmitter.onDestroyPlayer(player)
             player.destroy()
         }
         koe.destroyConnection(guild)
     }
 
-    override fun executeOnVoiceTransport(guildId: Long, operation: Runnable) {
+    fun executeOnVoiceTransport(guildId: Long, operation: Runnable) {
         val connection = koe.getConnection(guildId)
             ?: throw IllegalStateException("No Koe transport exists for guild $guildId")
         connection.executeOnTransport(operation)
     }
 
-    override fun getVoiceTransportGeneration(guildId: Long): Long =
+    fun getVoiceTransportGeneration(guildId: Long): Long =
         koe.getConnection(guildId)?.transportGeneration ?: 0
 
-    override fun setVoiceReceiveEnabled(guildId: Long, enabled: Boolean) {
+    fun setVoiceReceiveEnabled(guildId: Long, enabled: Boolean) {
         val connection = koe.getConnection(guildId)
             ?: throw IllegalStateException("No Koe transport exists for guild $guildId")
         connection.setReceiveEnabled(enabled)
     }
 
-    override fun getVoiceReceiveDiagnostics(guildId: Long): Map<String, Long> =
+    fun getVoiceReceiveDiagnostics(guildId: Long): Map<String, Long> =
         koe.getConnection(guildId)?.receiveDiagnostics ?: emptyMap()
 
     fun pause() {
@@ -272,26 +275,11 @@ class SocketContext(
         }
 
         override fun audioFrameReceived(frame: ReceivedAudioFrame) {
-            eventEmitter.onVoiceFrame(VoiceFrame(
-                frame.guildId,
-                frame.channelId,
-                frame.userId,
-                frame.ssrc,
-                frame.sequence,
-                frame.rtpTimestamp,
-                frame.transportGeneration,
-                frame.receivedNanos,
-                frame.isMarker,
-                frame.isDave,
-                frame.csrcs,
-                frame.extensionProfile,
-                frame.extensionWords,
-                frame.opus
-            ))
+            receiveCoordinator.acceptFrame(this@SocketContext, frame)
         }
 
         override fun transportGenerationChanged(guildId: Long, channelId: Long, generation: Long) {
-            eventEmitter.onVoiceTransportGeneration(guildId, channelId, generation)
+            receiveCoordinator.generationChanged(this@SocketContext, guildId, channelId, generation)
         }
     }
 }

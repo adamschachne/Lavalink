@@ -14,6 +14,17 @@ apply(plugin = "com.adarshr.test-logger")
 apply(plugin = "kotlin")
 apply(plugin = "kotlin-spring")
 
+extensions.configure<com.gorylenko.GitPropertiesPluginExtension> {
+    keys = listOf(
+        "git.branch",
+        "git.commit.id",
+        "git.commit.id.abbrev",
+        "git.commit.time",
+        "git.commit.message.short",
+        "git.dirty"
+    )
+}
+
 val archivesBaseName = "Lavalink"
 group = "dev.arbjerg.lavalink"
 
@@ -86,7 +97,7 @@ tasks {
             "project.version"    to project.version,
             "project.groupId"    to project.group,
             "project.artifactId" to "Lavalink-Server",
-            "env.BUILD_TIME"     to System.currentTimeMillis().toString()
+            "env.BUILD_TIME"     to (System.getenv("SOURCE_DATE_EPOCH") ?: "0")
         )
 
         filter(ReplaceTokens::class, mapOf("tokens" to tokens))

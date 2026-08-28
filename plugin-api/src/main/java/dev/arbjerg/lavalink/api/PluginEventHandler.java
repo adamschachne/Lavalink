@@ -59,13 +59,4 @@ public abstract class PluginEventHandler {
      */
     public void onDestroyPlayer(ISocketContext context, IPlayer player) {}
 
-    /**
-     * Fired on Koe's UDP event loop after transport and DAVE decryption.
-     * Plugins must enqueue and return immediately.
-     */
-    public void onVoiceFrame(ISocketContext context, VoiceFrame frame) {}
-
-    /** Fired when Koe installs a new Discord UDP transport for a guild. */
-    public void onVoiceTransportGeneration(ISocketContext context, long guildId,
-                                           long channelId, long generation) {}
 }

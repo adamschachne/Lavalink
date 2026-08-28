@@ -31,6 +31,7 @@ import dev.arbjerg.lavalink.protocol.v3.Message
 import dev.arbjerg.lavalink.protocol.v3.PlayerState
 import lavalink.server.config.ServerConfig
 import lavalink.server.player.LavalinkPlayer
+import lavalink.server.receive.ReceiveCoordinator
 import moe.kyokobot.koe.Koe
 import moe.kyokobot.koe.KoeOptions
 import org.json.JSONObject
@@ -50,7 +51,8 @@ class SocketServer(
     private val eventHandlers: List<PluginEventHandler>,
     private val webSocketExtensions: List<WebSocketExtension>,
     private val filterExtensions: List<AudioFilterExtension>,
-    private val objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper,
+    private val receiveCoordinator: ReceiveCoordinator
 ) : TextWebSocketHandler() {
 
     // sessionID <-> Session
@@ -127,7 +129,8 @@ class SocketServer(
             eventHandlers,
             webSocketExtensions,
             filterExtensions,
-            objectMapper
+            objectMapper,
+            receiveCoordinator
         )
         contextMap[sessionId] = socketContext
         socketContext.sendMessage(Message.ReadyEvent(false, sessionId))

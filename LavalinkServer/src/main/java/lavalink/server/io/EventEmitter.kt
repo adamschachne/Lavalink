@@ -2,7 +2,6 @@ package lavalink.server.io
 
 import dev.arbjerg.lavalink.api.IPlayer
 import dev.arbjerg.lavalink.api.PluginEventHandler
-import dev.arbjerg.lavalink.api.VoiceFrame
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -19,10 +18,6 @@ class EventEmitter(private val context: SocketContext, private val listeners: Co
     fun onWebSocketMessageOut(message: String) = iterate { it.onWebSocketMessageOut(context, message) }
     fun onNewPlayer(player: IPlayer) = iterate { it.onNewPlayer(context, player) }
     fun onDestroyPlayer(player: IPlayer) = iterate { it.onDestroyPlayer(context, player) }
-    fun onVoiceFrame(frame: VoiceFrame) = iterate { it.onVoiceFrame(context, frame) }
-    fun onVoiceTransportGeneration(guildId: Long, channelId: Long, generation: Long) =
-        iterate { it.onVoiceTransportGeneration(context, guildId, channelId, generation) }
-
     private fun iterate(func: (PluginEventHandler) -> Unit) {
         listeners.forEach {
             try {

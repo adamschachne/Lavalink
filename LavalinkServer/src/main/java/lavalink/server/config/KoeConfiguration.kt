@@ -13,7 +13,7 @@ class KoeConfiguration {
 
     @Bean
     fun koeOptions(): KoeOptions = KoeOptions.builder().apply {
-        // Keep inbound subscriptions closed until the receive plugin opens an
+        // Keep inbound subscriptions closed until the receive service opens an
         // ordered recording window on the existing Koe transport.
         setDeafened(true)
         setEnableDAVELogSink(true)
